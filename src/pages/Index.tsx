@@ -5,16 +5,34 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Menu, X, Scale, Wrench, Package, Phone, Mail, MapPin, CheckCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { ImageGallery } from "@/components/ImageGallery";
 
 import heroImage from "@/assets/hero-truck-scale.jpg";
 import partsImage from "@/assets/scale-parts.jpg";
 import calibrationImage from "@/assets/calibration-service.jpg";
 import scalesImage from "@/assets/scales-variety.jpg";
+import galleryMaintenance from "@/assets/gallery-maintenance.jpg";
+import galleryWeights from "@/assets/gallery-weights.jpg";
+import galleryWarehouse from "@/assets/gallery-warehouse.jpg";
+import galleryDisplay from "@/assets/gallery-display.jpg";
+import galleryPlatform from "@/assets/gallery-platform.jpg";
 
 const Index = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", message: "" });
   const { toast } = useToast();
+
+  const galleryImages = [
+    { src: heroImage, alt: "Balança rodoviária com caminhão", title: "Balanças Rodoviárias" },
+    { src: scalesImage, alt: "Variedade de balanças industriais", title: "Diversos Tipos de Balanças" },
+    { src: galleryMaintenance, alt: "Manutenção de balança industrial", title: "Serviço de Manutenção" },
+    { src: galleryWeights, alt: "Peso de calibração em balança digital", title: "Calibração de Precisão" },
+    { src: galleryWarehouse, alt: "Balanças de piso em galpão industrial", title: "Balanças para Galpões" },
+    { src: partsImage, alt: "Peças e componentes para balanças", title: "Peças e Componentes" },
+    { src: galleryDisplay, alt: "Display digital de balança", title: "Displays Digitais" },
+    { src: galleryPlatform, alt: "Plataforma de balança com células de carga", title: "Células de Carga" },
+    { src: calibrationImage, alt: "Técnico calibrando balança", title: "Calibração Certificada" },
+  ];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -205,37 +223,13 @@ const Index = () => {
       <section id="produtos" className="py-20">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">Produtos e Equipamentos</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">Galeria de Equipamentos</h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Trabalhamos com balanças de todos os tipos e tamanhos
+              Confira nossos equipamentos, serviços e peças em detalhes. Clique nas imagens para ampliar.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="overflow-hidden hover:shadow-xl transition-shadow">
-              <img src={scalesImage} alt="Variedade de balanças" className="w-full h-64 object-cover" />
-              <CardHeader>
-                <CardTitle>Balanças Industriais</CardTitle>
-                <CardDescription>Plataformas de alta capacidade para pesagem industrial</CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="overflow-hidden hover:shadow-xl transition-shadow">
-              <img src={heroImage} alt="Balança rodoviária" className="w-full h-64 object-cover" />
-              <CardHeader>
-                <CardTitle>Balanças Rodoviárias</CardTitle>
-                <CardDescription>Pesagem de veículos pesados com alta precisão</CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="overflow-hidden hover:shadow-xl transition-shadow">
-              <img src={partsImage} alt="Peças e componentes" className="w-full h-64 object-cover" />
-              <CardHeader>
-                <CardTitle>Peças e Componentes</CardTitle>
-                <CardDescription>Estoque completo de peças originais e compatíveis</CardDescription>
-              </CardHeader>
-            </Card>
-          </div>
+          <ImageGallery images={galleryImages} />
         </div>
       </section>
 
