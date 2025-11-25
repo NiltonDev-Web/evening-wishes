@@ -514,4 +514,334 @@ Use esta lista para garantir que alterou todos os lugares:
 
 ---
 
+---
+
+## 🖼️ Como Alterar as Imagens da Landing Page
+
+Se você quiser reutilizar esta landing page para outro tipo de serviço (ex: manutenção de empilhadeiras, equipamentos médicos, etc.), precisará substituir as imagens.
+
+### 📂 Localização das Imagens Atuais
+
+Todas as imagens estão na pasta: **`src/assets/`**
+
+```
+src/assets/
+├── hero-truck-scale.jpg          ⬅️ Imagem principal (Hero)
+├── calibration-service.jpg       ⬅️ Serviço de calibração
+├── scale-parts.jpg               ⬅️ Peças de balanças
+├── scales-variety.jpg            ⬅️ Variedade de balanças
+├── gallery-maintenance.jpg       ⬅️ Galeria: Manutenção
+├── gallery-weights.jpg           ⬅️ Galeria: Pesos
+├── gallery-warehouse.jpg         ⬅️ Galeria: Galpão
+├── gallery-display.jpg           ⬅️ Galeria: Display
+└── gallery-platform.jpg          ⬅️ Galeria: Plataforma
+```
+
+---
+
+### 🔄 Como Substituir Imagens - 3 Métodos
+
+#### **Método 1: Substituir Arquivos Diretamente (Mais Fácil)**
+
+1. Prepare suas novas imagens com os **mesmos nomes** dos arquivos atuais
+2. Substitua os arquivos na pasta `src/assets/`
+3. Pronto! A landing page usará automaticamente suas novas imagens
+
+**Vantagem**: Não precisa editar código  
+**Desvantagem**: Precisa usar os mesmos nomes de arquivo
+
+---
+
+#### **Método 2: Adicionar Novas Imagens e Atualizar Imports**
+
+Se você quiser usar **nomes diferentes** para suas imagens:
+
+##### Passo 1: Adicione suas imagens na pasta `src/assets/`
+
+Exemplo:
+```
+src/assets/
+├── empilhadeira-principal.jpg
+├── manutencao-empilhadeira.jpg
+├── pecas-empilhadeira.jpg
+└── ...
+```
+
+##### Passo 2: Atualize os imports no arquivo `src/pages/Index.tsx`
+
+Localize as linhas 10-18 e altere:
+
+```tsx
+// ANTES (Balanças)
+import heroImage from "@/assets/hero-truck-scale.jpg";
+import partsImage from "@/assets/scale-parts.jpg";
+import calibrationImage from "@/assets/calibration-service.jpg";
+import scalesImage from "@/assets/scales-variety.jpg";
+import galleryMaintenance from "@/assets/gallery-maintenance.jpg";
+import galleryWeights from "@/assets/gallery-weights.jpg";
+import galleryWarehouse from "@/assets/gallery-warehouse.jpg";
+import galleryDisplay from "@/assets/gallery-display.jpg";
+import galleryPlatform from "@/assets/gallery-platform.jpg";
+
+// DEPOIS (Empilhadeiras - exemplo)
+import heroImage from "@/assets/empilhadeira-principal.jpg";
+import partsImage from "@/assets/pecas-empilhadeira.jpg";
+import calibrationImage from "@/assets/manutencao-empilhadeira.jpg";
+import scalesImage from "@/assets/empilhadeiras-variedade.jpg";
+import galleryMaintenance from "@/assets/galeria-oficina.jpg";
+import galleryWeights from "@/assets/galeria-armazem.jpg";
+import galleryWarehouse from "@/assets/galeria-servico.jpg";
+import galleryDisplay from "@/assets/galeria-painel.jpg";
+import galleryPlatform from "@/assets/galeria-equipamento.jpg";
+```
+
+##### Passo 3: Atualize os textos alternativos (ALT) e títulos
+
+Localize as linhas 25-35 e atualize os textos:
+
+```tsx
+const galleryImages = [
+  { src: heroImage, alt: "Empilhadeira em operação", title: "Empilhadeiras Industriais" },
+  { src: scalesImage, alt: "Diversos modelos de empilhadeiras", title: "Modelos Disponíveis" },
+  { src: galleryMaintenance, alt: "Manutenção de empilhadeira", title: "Serviço de Manutenção" },
+  // ... continue para todas as imagens
+];
+```
+
+---
+
+#### **Método 3: Gerar Imagens com IA (Lovable AI)**
+
+Se você não tem imagens próprias, pode gerar usando IA:
+
+##### Exemplo de Edge Function para Gerar Imagem:
+
+Crie `supabase/functions/generate-image/index.ts`:
+
+```typescript
+import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+
+const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
+
+const handler = async (req: Request): Promise<Response> => {
+  if (req.method === "OPTIONS") {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    const { prompt } = await req.json();
+
+    const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "google/gemini-2.5-flash-image-preview",
+        messages: [
+          {
+            role: "user",
+            content: prompt
+          }
+        ],
+        modalities: ["image", "text"]
+      })
+    });
+
+    const data = await response.json();
+    const imageUrl = data.choices?.[0]?.message?.images?.[0]?.image_url?.url;
+
+    return new Response(
+      JSON.stringify({ imageUrl }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json", ...corsHeaders }
+      }
+    );
+  } catch (error: any) {
+    console.error("Erro ao gerar imagem:", error);
+    return new Response(
+      JSON.stringify({ error: error.message }),
+      { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
+    );
+  }
+};
+
+serve(handler);
+```
+
+##### Prompts de Exemplo para Gerar Imagens:
+
+```javascript
+// Hero - Imagem principal
+"Professional industrial forklift in modern warehouse, wide angle shot, bright lighting, high quality photography"
+
+// Manutenção
+"Technician performing maintenance on industrial forklift, professional service, workshop environment"
+
+// Peças
+"Industrial forklift spare parts arranged on table, professional product photography, studio lighting"
+
+// Galeria - Variedade
+"Multiple types of industrial forklifts, showroom display, professional photography"
+```
+
+---
+
+### 📐 Especificações Técnicas das Imagens
+
+Para melhor desempenho e qualidade visual:
+
+| Tipo de Imagem | Tamanho Recomendado | Proporção | Formato |
+|----------------|---------------------|-----------|---------|
+| **Hero (Principal)** | 1920 x 1080 px | 16:9 | JPG/WebP |
+| **Galeria** | 1200 x 800 px | 3:2 | JPG/WebP |
+| **Cards de Serviço** | 800 x 600 px | 4:3 | JPG/WebP |
+| **Seção de Contato** | 800 x 600 px | 4:3 | JPG/WebP |
+
+**Dicas de Otimização:**
+- Mantenha imagens abaixo de **500 KB** cada
+- Use compressão: [TinyPNG](https://tinypng.com/) ou [Squoosh](https://squoosh.app/)
+- Formato WebP oferece melhor qualidade com menor tamanho
+- Para imagens com transparência, use PNG
+
+---
+
+### 🎨 Onde as Imagens São Usadas
+
+#### **1. Hero Section (Tela Principal) - Linha 106**
+```tsx
+<img src={heroImage} alt="Caminhão em balança rodoviária" className="w-full h-full object-cover" />
+```
+**O que alterar**: 
+- `alt=""` - Descrição da imagem (importante para SEO)
+
+#### **2. Galeria de Imagens - Linhas 25-35**
+```tsx
+const galleryImages = [
+  { 
+    src: heroImage, 
+    alt: "Balança rodoviária com caminhão",     // ⬅️ Altere a descrição
+    title: "Balanças Rodoviárias"               // ⬅️ Altere o título
+  },
+  // ... mais imagens
+];
+```
+
+#### **3. Seção de Contato - Linha 357**
+```tsx
+<img src={calibrationImage} alt="Serviço de calibração" className="rounded-lg shadow-xl mb-8" />
+```
+
+---
+
+### 🔧 Exemplos de Adaptação para Outros Serviços
+
+#### **Exemplo 1: Empilhadeiras**
+```tsx
+// Imports
+import heroImage from "@/assets/empilhadeira-hero.jpg";
+import partsImage from "@/assets/pecas-empilhadeira.jpg";
+
+// Galeria
+const galleryImages = [
+  { src: heroImage, alt: "Empilhadeira industrial", title: "Empilhadeiras" },
+  { src: partsImage, alt: "Peças de empilhadeira", title: "Peças Originais" },
+];
+```
+
+#### **Exemplo 2: Equipamentos Médicos**
+```tsx
+// Imports
+import heroImage from "@/assets/equipamento-medico-hero.jpg";
+import partsImage from "@/assets/pecas-medicas.jpg";
+
+// Galeria
+const galleryImages = [
+  { src: heroImage, alt: "Equipamento médico hospitalar", title: "Equipamentos" },
+  { src: partsImage, alt: "Peças e componentes médicos", title: "Componentes" },
+];
+```
+
+#### **Exemplo 3: Ar Condicionado**
+```tsx
+// Imports
+import heroImage from "@/assets/ar-condicionado-hero.jpg";
+import partsImage from "@/assets/pecas-ar-condicionado.jpg";
+
+// Galeria
+const galleryImages = [
+  { src: heroImage, alt: "Sistema de ar condicionado industrial", title: "Sistemas HVAC" },
+  { src: partsImage, alt: "Peças de ar condicionado", title: "Peças e Filtros" },
+];
+```
+
+---
+
+### ⚠️ Checklist de Alteração de Imagens
+
+Use esta lista ao adaptar para outro serviço:
+
+- [ ] **Substituir imagens** na pasta `src/assets/` (9 imagens no total)
+- [ ] **Atualizar imports** (Linhas 10-18 do `Index.tsx`)
+- [ ] **Atualizar textos ALT** das imagens (importante para acessibilidade e SEO)
+- [ ] **Atualizar títulos** na galeria (Linhas 25-35)
+- [ ] **Otimizar tamanho** das imagens (< 500 KB cada)
+- [ ] **Testar responsividade** em mobile, tablet e desktop
+- [ ] **Verificar contraste** de texto sobre imagens (Hero Section)
+
+---
+
+### 🌐 Recursos para Obter Imagens
+
+#### **Bancos de Imagens Gratuitas:**
+- [Unsplash](https://unsplash.com/) - Alta qualidade, uso comercial livre
+- [Pexels](https://www.pexels.com/) - Fotos e vídeos gratuitos
+- [Pixabay](https://pixabay.com/) - Milhões de imagens gratuitas
+- [Freepik](https://www.freepik.com/) - Fotos, vetores e ilustrações
+
+#### **Ferramentas de Edição:**
+- [Canva](https://www.canva.com/) - Editor online fácil
+- [Photopea](https://www.photopea.com/) - Alternativa gratuita ao Photoshop
+- [Remove.bg](https://www.remove.bg/) - Remover fundo de imagens
+
+#### **Compressão de Imagens:**
+- [TinyPNG](https://tinypng.com/) - Compressão inteligente
+- [Squoosh](https://squoosh.app/) - Ferramenta do Google
+- [ImageOptim](https://imageoptim.com/) - App para Mac
+
+---
+
+### 💡 Dicas de SEO para Imagens
+
+1. **Nomes de Arquivo Descritivos**
+   ```
+   ❌ Ruim: IMG_1234.jpg
+   ✅ Bom: manutencao-empilhadeira-industrial.jpg
+   ```
+
+2. **Textos ALT Relevantes**
+   ```tsx
+   ❌ Ruim: alt="imagem"
+   ✅ Bom: alt="Técnico realizando manutenção preventiva em empilhadeira industrial"
+   ```
+
+3. **Títulos Informativos**
+   ```tsx
+   ❌ Ruim: title="Foto 1"
+   ✅ Bom: title="Manutenção Preventiva de Empilhadeiras"
+   ```
+
+4. **Formatos Modernos**
+   - Use WebP quando possível (melhor compressão)
+   - Fallback para JPG para compatibilidade
+
+---
+
 **Desenvolvido para o projeto BalançasPro** 🎯
