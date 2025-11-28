@@ -2,8 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/* Definition of the design system. 
+  All colors, gradients, fonts, etc should be defined here. 
+  All colors MUST be HSL channels (without 'hsl()') to allow Tailwind's opacity modifiers.
 */
 
 @layer base {
@@ -38,23 +39,21 @@ All colors MUST be HSL.
 
     --radius: 0.5rem;
     
+    /* Gradient colors - Defined here for Light Mode consistency */
+    --primary-light: 200 98% 50%;
+    --accent-light: 38 92% 60%;
     --gradient-primary: linear-gradient(135deg, hsl(200 98% 39%), hsl(200 98% 50%));
-    --gradient-hero: linear-gradient(180deg, hsl(220 13% 13% / 0.8), hsl(220 13% 13% / 0.6));
+    /* Ajustei o hero light para ser sutil, já que o dark usava transparência sobre fundo escuro */
+    --gradient-hero: linear-gradient(180deg, hsl(0 0% 100% / 0.8), hsl(0 0% 100% / 0.6));
 
+    /* Sidebar - Light Mode */
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
@@ -87,8 +86,13 @@ All colors MUST be HSL.
     --input: 220 13% 16%;
     --ring: 200 98% 50%;
     
+    /* Gradient colors - Dark Mode */
+    --primary-light: 200 98% 50%;
+    --accent-light: 38 92% 60%;
     --gradient-primary: linear-gradient(135deg, hsl(200 98% 39%), hsl(200 98% 50%));
     --gradient-hero: linear-gradient(180deg, hsl(220 13% 9% / 0.8), hsl(220 13% 9% / 0.6));
+
+    /* Sidebar - Dark Mode */
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -98,9 +102,7 @@ All colors MUST be HSL.
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }

@@ -6,7 +6,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Menu, X, Scale, Wrench, Package, Phone, Mail, MapPin, CheckCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { ImageGallery } from "@/components/ImageGallery";
-
 import heroImage from "@/assets/hero-truck-scale.jpg";
 import partsImage from "@/assets/scale-parts.jpg";
 import calibrationImage from "@/assets/calibration-service.jpg";
@@ -56,7 +55,7 @@ const Index = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Scale className="h-8 w-8 text-primary" />
-              <span className="text-2xl font-bold text-foreground">BalançasPro</span>
+              <span className="text-5xl font-bold text-foreground">NS Manutenção e Calibração ME</span>
             </div>
             
             <div className="hidden md:flex items-center gap-6">
@@ -110,10 +109,10 @@ const Index = () => {
         <div className="container mx-auto px-4 relative z-10 text-background">
           <div className="max-w-3xl">
             <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-              Manutenção e Calibração de Balanças Industriais
+              Manutenção e Calibração de Balanças e Instrumentos Industriais
             </h1>
             <p className="text-xl md:text-2xl mb-8 text-background/90">
-              Serviços especializados para balanças de todos os tamanhos. Precisão e confiabilidade garantidas.
+              Serviços especializados para balanças de todos os tamanhos e instrumentos. Precisão e confiabilidade garantidas.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button size="lg" onClick={() => scrollToSection("contato")} className="bg-primary hover:bg-primary/90">
@@ -132,8 +131,8 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">Nossos Serviços</h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Soluções completas para manutenção, calibração e fornecimento de peças
+            <p className="text-xl text-muted-foreground max-w-4xl mx-auto">
+              Soluções completas e na medida certa, para sua empresa, conserto, manutenção e calibração.
             </p>
           </div>
 
@@ -143,7 +142,7 @@ const Index = () => {
                 <Wrench className="h-12 w-12 text-primary mb-4" />
                 <CardTitle>Manutenção Preventiva</CardTitle>
                 <CardDescription>
-                  Manutenção regular para garantir o funcionamento perfeito de suas balanças
+                  Manutenção regular para garantir o funcionamento perfeito de seus instrumentos
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -160,6 +159,10 @@ const Index = () => {
                     <CheckCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
                     <span>Relatório detalhado</span>
                   </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                    <span>Controle e Gerenciamento das Manutenção</span>
+                  </li>
                 </ul>
               </CardContent>
             </Card>
@@ -169,7 +172,7 @@ const Index = () => {
                 <Scale className="h-12 w-12 text-primary mb-4" />
                 <CardTitle>Calibração Certificada</CardTitle>
                 <CardDescription>
-                  Calibração com certificado rastreável ao INMETRO
+                  Calibração com padrões certificados rastreável ao INMETRO
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -181,6 +184,10 @@ const Index = () => {
                   <li className="flex items-start gap-2">
                     <CheckCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
                     <span>Certificado de calibração</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                    <span>Laboratorio movel</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
@@ -211,6 +218,10 @@ const Index = () => {
                   <li className="flex items-start gap-2">
                     <CheckCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
                     <span>Plataformas e acessórios</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                    <span> E outros</span>
                   </li>
                 </ul>
               </CardContent>
@@ -322,7 +333,7 @@ const Index = () => {
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                    <span>Certificado INMETRO</span>
+                    <span>Certificado Rastreado a RBC</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
@@ -347,8 +358,8 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">Entre em Contato</h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Estamos prontos para atender sua empresa com excelência
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Estamos prontos para atender sua empresa com excelência que você merece.
             </p>
           </div>
 
@@ -361,8 +372,8 @@ const Index = () => {
                   <Phone className="h-6 w-6 text-primary shrink-0 mt-1" />
                   <div>
                     <h3 className="font-semibold text-lg mb-1">Telefone</h3>
-                    <p className="text-muted-foreground">(11) 98765-4321</p>
-                    <p className="text-muted-foreground">(11) 3456-7890</p>
+                    <p className="text-muted-foreground">(00) 00000-0000</p>
+                    <p className="text-muted-foreground">(00) 00000-0000</p>
                   </div>
                 </div>
 
@@ -370,17 +381,17 @@ const Index = () => {
                   <Mail className="h-6 w-6 text-primary shrink-0 mt-1" />
                   <div>
                     <h3 className="font-semibold text-lg mb-1">E-mail</h3>
-                    <p className="text-muted-foreground">contato@balancaspro.com.br</p>
-                    <p className="text-muted-foreground">vendas@balancaspro.com.br</p>
+                    <p className="text-muted-foreground">contato@nstecnologias.com.br</p>
+                    <p className="text-muted-foreground">contato@nstecnologias.com.br</p>
                   </div>
                 </div>
-
+.
                 <div className="flex items-start gap-4">
                   <MapPin className="h-6 w-6 text-primary shrink-0 mt-1" />
                   <div>
                     <h3 className="font-semibold text-lg mb-1">Endereço</h3>
-                    <p className="text-muted-foreground">Rua Industrial, 1234</p>
-                    <p className="text-muted-foreground">São Paulo - SP, 01234-567</p>
+                    <p className="text-muted-foreground">AV. Francisco Erensto do Rgo,1499</p>
+                    <p className="text-muted-foreground">Campina Grande - PB, 81-99165-4555</p>
                   </div>
                 </div>
               </div>
@@ -445,7 +456,7 @@ const Index = () => {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <Scale className="h-8 w-8 text-primary" />
-                <span className="text-2xl font-bold">BalançasPro</span>
+                <span className="text-2xl font-bold">NS Tecnologias</span>
               </div>
               <p className="text-background/80">
                 Especialistas em manutenção, calibração e venda de peças para balanças industriais.
@@ -476,7 +487,7 @@ const Index = () => {
               <h3 className="font-semibold text-lg mb-4">Contato</h3>
               <ul className="space-y-2 text-background/80">
                 <li>(11) 98765-4321</li>
-                <li>contato@balancaspro.com.br</li>
+                <li>contato@nstecnologias.com.br</li>
                 <li>Seg - Sex: 8h às 18h</li>
                 <li>Sáb: 8h às 12h</li>
               </ul>
@@ -484,7 +495,7 @@ const Index = () => {
           </div>
 
           <div className="border-t border-background/20 mt-8 pt-8 text-center text-background/60">
-            <p>&copy; 2024 BalançasPro. Todos os direitos reservados.</p>
+            <p>&copy; 2025 NS Tecnologias ME. Todos os direitos reservados.</p>
           </div>
         </div>
       </footer>
