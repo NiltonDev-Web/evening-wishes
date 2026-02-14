@@ -7,12 +7,12 @@ import { Menu, X, Scale, Wrench, Package, Phone, Mail, MapPin, CheckCircle } fro
 import { useToast } from "@/hooks/use-toast";
 import { ImageGallery } from "@/components/ImageGallery";
 import heroImage from "@/assets/hero-truck-scale.jpg";
-import partsImage from "@/assets/scale-parts.jpg";
-import calibrationImage from "@/assets/calibration-service.jpg";
-import scalesImage from "@/assets/scales-variety.jpg";
-import galleryMaintenance from "@/assets/gallery-maintenance.jpg";
-import galleryWeights from "@/assets/gallery-weights.jpg";
-import galleryWarehouse from "@/assets/gallery-warehouse.jpg";
+import partsImage from "@/assets/padroes.jpg";
+import calibrationImage from "@/assets/calibration-service.png";
+import scalesImage from "@/assets/diversos-tipos-balanca.jpg";
+import galleryMaintenance from "@/assets/diversos.jpg";
+import galleryWeights from "@/assets/calibracao-precisa.jpg";
+import galleryWarehouse from "@/assets/sistema-pesagem.jpg";
 import galleryDisplay from "@/assets/gallery-display.jpg";
 import galleryPlatform from "@/assets/gallery-platform.jpg";
 
@@ -22,25 +22,49 @@ const Index = () => {
   const { toast } = useToast();
 
   const galleryImages = [
-    { src: heroImage, alt: "Balança rodoviária com caminhão", title: "Balanças Rodoviárias" },
+    { src: heroImage, alt: "Balança rodoviária com caminhão", title: "Balanças Rodoviárias (Em desenvolvimento)" },
     { src: scalesImage, alt: "Variedade de balanças industriais", title: "Diversos Tipos de Balanças" },
-    { src: galleryMaintenance, alt: "Manutenção de balança industrial", title: "Serviço de Manutenção" },
+    { src: galleryMaintenance, alt: "Manutenção de balança industrial", title: "Calibrações de Instrumentos Analiticos" },
     { src: galleryWeights, alt: "Peso de calibração em balança digital", title: "Calibração de Precisão" },
-    { src: galleryWarehouse, alt: "Balanças de piso em galpão industrial", title: "Balanças para Galpões" },
-    { src: partsImage, alt: "Peças e componentes para balanças", title: "Peças e Componentes" },
+    { src: galleryWarehouse, alt: "Balanças de piso em galpão industrial", title: "Sistemas de Pesagem Personalizados" },
+    { src: partsImage, alt: "Pesos Padrões Certificados para balanças", title: "Pesos Padrões Certificados" },
     { src: galleryDisplay, alt: "Display digital de balança", title: "Displays Digitais" },
     { src: galleryPlatform, alt: "Plataforma de balança com células de carga", title: "Células de Carga" },
     { src: calibrationImage, alt: "Técnico calibrando balança", title: "Calibração Certificada" },
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    toast({
-      title: "Mensagem enviada!",
-      description: "Entraremos em contato em breve.",
-    });
-    setFormData({ name: "", email: "", phone: "", message: "" });
+  const handleSubmit = async (e) => {
+  e.preventDefault(); // Impede a página de recarregar
+
+  // 1. Criamos um objeto com os dados e sua Chave de Acesso
+  const dataToSubmit = {
+    ...formData,
+    access_key: "1557417f-44fb-4e9b-baa8-32fc0be8c2c8" // Pegue uma em web3forms.com
   };
+
+  try {
+    const response = await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify(dataToSubmit),
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      alert("Mensagem enviada com sucesso!");
+      setFormData({ name: "", email: "", phone: "", message: "" }); // Limpa o form
+    } else {
+      alert("Erro ao enviar. Tente novamente.");
+    }
+  } catch (error) {
+    console.error("Erro na requisição:", error);
+    alert("Erro de conexão.");
+  }
+};
 
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -54,8 +78,8 @@ const Index = () => {
         <nav className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Scale className="h-8 w-8 text-primary" />
-              <span className="text-5xl font-bold text-foreground">NS Manutenção e Calibração ME</span>
+              <Scale className="h-20 w-20 text-primary" />
+              <span className="text-2xl font-bold text-foreground">NS TECNOLOGIA EM SERVIÇOS DE MANUTENÇÃO E CALIBRAÇÃO</span>
             </div>
             
             <div className="hidden md:flex items-center gap-6">
@@ -209,7 +233,7 @@ const Index = () => {
                 <ul className="space-y-2">
                   <li className="flex items-start gap-2">
                     <CheckCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-                    <span>Células de carga</span>
+                    <span>Células de carga e acessórios</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle className="h-5 w-5 text-primary shrink-0 mt-0.5" />
@@ -259,7 +283,7 @@ const Index = () => {
               <CardHeader>
                 <CardTitle className="text-2xl">Calibração Básica</CardTitle>
                 <div className="mt-4">
-                  <span className="text-4xl font-bold text-primary">A partir de R$ 350</span>
+                  <span className="text-3xl font-bold text-primary">Entre em contato</span>
                 </div>
               </CardHeader>
               <CardContent>
@@ -290,7 +314,7 @@ const Index = () => {
               <CardHeader>
                 <CardTitle className="text-2xl">Manutenção Completa</CardTitle>
                 <div className="mt-4">
-                  <span className="text-4xl font-bold text-primary">A partir de R$ 650</span>
+                  <span className="text-3xl font-bold text-primary">Entre em contato</span>
                 </div>
               </CardHeader>
               <CardContent>
@@ -320,9 +344,9 @@ const Index = () => {
 
             <Card className="hover:shadow-xl transition-shadow">
               <CardHeader>
-                <CardTitle className="text-2xl">Balanças Rodoviárias</CardTitle>
+                <CardTitle className="text-2xl">Balanças Rodoviárias (Em desenvolvimento)</CardTitle>
                 <div className="mt-4">
-                  <span className="text-4xl font-bold text-primary">Sob Consulta</span>
+                  <span className="text-3xl font-bold text-primary">Sob Consulta</span>
                 </div>
               </CardHeader>
               <CardContent>
@@ -390,8 +414,8 @@ const Index = () => {
                   <MapPin className="h-6 w-6 text-primary shrink-0 mt-1" />
                   <div>
                     <h3 className="font-semibold text-lg mb-1">Endereço</h3>
-                    <p className="text-muted-foreground">AV. Francisco Erensto do Rgo,1499</p>
-                    <p className="text-muted-foreground">Campina Grande - PB, 81-99165-4555</p>
+                    <p className="text-muted-foreground">Campina Grande - PB</p>
+                    <p className="text-muted-foreground">Campina Grande - PB</p>
                   </div>
                 </div>
               </div>
@@ -432,7 +456,7 @@ const Index = () => {
                   </div>
                   <div>
                     <Textarea
-                      placeholder="Descreva suas necessidades..."
+                      placeholder="Descreva sua solicitação..."
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       required
@@ -477,8 +501,8 @@ const Index = () => {
               <h3 className="font-semibold text-lg mb-4">Produtos</h3>
               <ul className="space-y-2 text-background/80">
                 <li>Balanças Industriais</li>
-                <li>Balanças Rodoviárias</li>
-                <li>Células de Carga</li>
+                <li>Balanças Rodoviárias (Em desenvolvimento)</li>
+                <li>Células de carga e acessórios</li>
                 <li>Indicadores Digitais</li>
               </ul>
             </div>
@@ -486,16 +510,16 @@ const Index = () => {
             <div>
               <h3 className="font-semibold text-lg mb-4">Contato</h3>
               <ul className="space-y-2 text-background/80">
-                <li>(11) 98765-4321</li>
+                <li>(81) 99165-4555</li>
                 <li>contato@nstecnologias.com.br</li>
-                <li>Seg - Sex: 8h às 18h</li>
-                <li>Sáb: 8h às 12h</li>
+                <li>Seg - Sexta: 7:30h às 17:30h</li>
+                <li>Campina Grande - PB</li>
               </ul>
             </div>
           </div>
 
           <div className="border-t border-background/20 mt-8 pt-8 text-center text-background/60">
-            <p>&copy; 2025 NS Tecnologias ME. Todos os direitos reservados.</p>
+            <p>&copy; 2026 NS Tecnologias. Todos os direitos reservados.</p>
           </div>
         </div>
       </footer>
