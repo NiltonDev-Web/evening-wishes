@@ -173,8 +173,8 @@ const Index = () => {
         <nav className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Scale className="h-20 w-20 text-primary" />
-              <span className="text-2xl font-bold text-foreground">NS TECNOLOGIA EM SERVIÇOS DE MANUTENÇÃO E CALIBRAÇÃO</span>
+              <Scale className="h-15 w-20 text-primary" />
+              <span className="text-2xl font-bold text-foreground">NS TECNOLOGIA EM MANUTENÇÃO E CALIBRAÇÃO</span>
             </div>
             
             <div className="hidden md:flex items-center gap-6">
