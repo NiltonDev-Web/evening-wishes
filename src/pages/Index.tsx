@@ -19,7 +19,7 @@ import galleryPlatform from "@/assets/gallery-platform.jpg";
 const Index = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", message: "" });
-  const [surveyAnswers, setSurveyAnswers] = useState<Record<string, string>>({});
+  const [surveyAnswers, setSurveyAnswers] = useState<Record<string, string[]>>({});
   const [surveyName, setSurveyName] = useState("");
   const [surveyEmail, setSurveyEmail] = useState("");
   const [surveySubmitting, setSurveySubmitting] = useState(false);
@@ -59,7 +59,13 @@ const Index = () => {
   ];
 
   const handleSurveyAnswer = (questionId: string, answer: string) => {
-    setSurveyAnswers((prev) => ({ ...prev, [questionId]: answer }));
+    setSurveyAnswers((prev) => {
+      const current = prev[questionId] || [];
+      if (current.includes(answer)) {
+        return { ...prev, [questionId]: current.filter((a) => a !== answer) };
+      }
+      return { ...prev, [questionId]: [...current, answer] };
+    });
   };
 
   const handleSurveySubmit = async () => {
@@ -67,7 +73,7 @@ const Index = () => {
       toast({ title: "Preencha seu nome e e-mail antes de enviar.", variant: "destructive" });
       return;
     }
-    if (Object.keys(surveyAnswers).length === 0) {
+    if (Object.values(surveyAnswers).every((a) => a.length === 0)) {
       toast({ title: "Responda pelo menos uma pergunta.", variant: "destructive" });
       return;
     }
@@ -75,8 +81,8 @@ const Index = () => {
     setSurveySubmitting(true);
 
     const respostasTexto = surveyQuestions
-      .filter((q) => surveyAnswers[q.id])
-      .map((q) => `${q.question} → ${surveyAnswers[q.id]}`)
+      .filter((q) => surveyAnswers[q.id]?.length > 0)
+      .map((q) => `${q.question} → ${surveyAnswers[q.id].join(", ")}`)
       .join("\n");
 
     const dataToSubmit = {
@@ -507,12 +513,12 @@ const Index = () => {
                     {q.options.map((option) => (
                       <Button
                         key={option}
-                        variant={surveyAnswers[q.id] === option ? "default" : "outline"}
+                        variant={surveyAnswers[q.id]?.includes(option) ? "default" : "outline"}
                         size="sm"
                         onClick={() => handleSurveyAnswer(q.id, option)}
                         className="transition-all"
                       >
-                        {surveyAnswers[q.id] === option && (
+                        {surveyAnswers[q.id]?.includes(option) && (
                           <CheckCircle className="h-4 w-4 mr-1" />
                         )}
                         {option}
@@ -533,7 +539,7 @@ const Index = () => {
                 {surveySubmitting ? "Enviando..." : "Enviar Respostas"}
               </Button>
               <p className="text-sm text-muted-foreground mt-2">
-                {Object.keys(surveyAnswers).length} de {surveyQuestions.length} perguntas respondidas
+                {Object.values(surveyAnswers).filter((a) => a.length > 0).length} de {surveyQuestions.length} perguntas respondidas
               </p>
             </div>
           </div>
