@@ -19,7 +19,96 @@ import galleryPlatform from "@/assets/gallery-platform.jpg";
 const Index = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", phone: "", message: "" });
+  const [surveyAnswers, setSurveyAnswers] = useState<Record<string, string>>({});
+  const [surveyName, setSurveyName] = useState("");
+  const [surveyEmail, setSurveyEmail] = useState("");
+  const [surveySubmitting, setSurveySubmitting] = useState(false);
   const { toast } = useToast();
+
+  const surveyQuestions = [
+    {
+      id: "interesse",
+      question: "Qual serviço mais lhe interessa?",
+      options: ["Calibração", "Manutenção Preventiva", "Venda de Peças", "Consultoria Técnica"],
+    },
+    {
+      id: "frequencia",
+      question: "Com que frequência você calibra seus equipamentos?",
+      options: ["Mensal", "Trimestral", "Semestral", "Anual", "Nunca calibrei"],
+    },
+    {
+      id: "equipamento",
+      question: "Qual tipo de equipamento você utiliza?",
+      options: ["Balança de bancada", "Balança de piso", "Balança rodoviária", "Instrumentos analíticos", "Outros"],
+    },
+    {
+      id: "urgencia",
+      question: "Qual sua necessidade atual?",
+      options: ["Urgente (preciso agora)", "Em breve (próximos 30 dias)", "Planejando para o futuro", "Apenas pesquisando"],
+    },
+    {
+      id: "avaliacao",
+      question: "Como você avalia nossa página?",
+      options: ["Excelente", "Boa", "Regular", "Precisa melhorar"],
+    },
+    {
+      id: "sugestao",
+      question: "O que mais gostaria de ver em nossos serviços?",
+      options: ["Atendimento 24h", "Planos mensais", "Loja online de peças", "App de acompanhamento", "Treinamentos"],
+    },
+  ];
+
+  const handleSurveyAnswer = (questionId: string, answer: string) => {
+    setSurveyAnswers((prev) => ({ ...prev, [questionId]: answer }));
+  };
+
+  const handleSurveySubmit = async () => {
+    if (!surveyName || !surveyEmail) {
+      toast({ title: "Preencha seu nome e e-mail antes de enviar.", variant: "destructive" });
+      return;
+    }
+    if (Object.keys(surveyAnswers).length === 0) {
+      toast({ title: "Responda pelo menos uma pergunta.", variant: "destructive" });
+      return;
+    }
+
+    setSurveySubmitting(true);
+
+    const respostasTexto = surveyQuestions
+      .filter((q) => surveyAnswers[q.id])
+      .map((q) => `${q.question} → ${surveyAnswers[q.id]}`)
+      .join("\n");
+
+    const dataToSubmit = {
+      access_key: "1557417f-44fb-4e9b-baa8-32fc0be8c2c8",
+      subject: "Nova Enquete Recebida - NS Tecnologias",
+      from_name: surveyName,
+      name: surveyName,
+      email: surveyEmail,
+      message: `RESPOSTAS DA ENQUETE:\n\n${respostasTexto}`,
+    };
+
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(dataToSubmit),
+      });
+      const result = await response.json();
+      if (result.success) {
+        toast({ title: "Enquete enviada com sucesso! Obrigado pela sua opinião." });
+        setSurveyAnswers({});
+        setSurveyName("");
+        setSurveyEmail("");
+      } else {
+        toast({ title: "Erro ao enviar. Tente novamente.", variant: "destructive" });
+      }
+    } catch {
+      toast({ title: "Erro de conexão.", variant: "destructive" });
+    } finally {
+      setSurveySubmitting(false);
+    }
+  };
 
   const galleryImages = [
     { src: heroImage, alt: "Balança rodoviária com caminhão", title: "Balanças Rodoviárias (Em desenvolvimento)" },
@@ -92,6 +181,9 @@ const Index = () => {
               <button onClick={() => scrollToSection("precos")} className="text-foreground hover:text-primary transition-colors">
                 Preços
               </button>
+              <button onClick={() => scrollToSection("enquete")} className="text-foreground hover:text-primary transition-colors">
+                Enquete
+              </button>
               <button onClick={() => scrollToSection("contato")} className="text-foreground hover:text-primary transition-colors">
                 Contato
               </button>
@@ -113,6 +205,9 @@ const Index = () => {
               </button>
               <button onClick={() => scrollToSection("precos")} className="block w-full text-left text-foreground hover:text-primary transition-colors py-2">
                 Preços
+              </button>
+              <button onClick={() => scrollToSection("enquete")} className="block w-full text-left text-foreground hover:text-primary transition-colors py-2">
+                Enquete
               </button>
               <button onClick={() => scrollToSection("contato")} className="block w-full text-left text-foreground hover:text-primary transition-colors py-2">
                 Contato
@@ -373,6 +468,74 @@ const Index = () => {
                 </Button>
               </CardContent>
             </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Survey Section */}
+      <section id="enquete" className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">Sua Opinião Importa!</h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Responda nossa enquete rápida com apenas um clique por pergunta. Suas respostas nos ajudam a melhorar nossos serviços.
+            </p>
+          </div>
+
+          <div className="max-w-3xl mx-auto space-y-6">
+            <div className="grid sm:grid-cols-2 gap-4 mb-6">
+              <Input
+                placeholder="Seu nome"
+                value={surveyName}
+                onChange={(e) => setSurveyName(e.target.value)}
+              />
+              <Input
+                type="email"
+                placeholder="Seu e-mail"
+                value={surveyEmail}
+                onChange={(e) => setSurveyEmail(e.target.value)}
+              />
+            </div>
+
+            {surveyQuestions.map((q) => (
+              <Card key={q.id} className="hover:shadow-md transition-shadow">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-lg">{q.question}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2">
+                    {q.options.map((option) => (
+                      <Button
+                        key={option}
+                        variant={surveyAnswers[q.id] === option ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => handleSurveyAnswer(q.id, option)}
+                        className="transition-all"
+                      >
+                        {surveyAnswers[q.id] === option && (
+                          <CheckCircle className="h-4 w-4 mr-1" />
+                        )}
+                        {option}
+                      </Button>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+
+            <div className="text-center pt-4">
+              <Button
+                size="lg"
+                onClick={handleSurveySubmit}
+                disabled={surveySubmitting}
+                className="min-w-[200px]"
+              >
+                {surveySubmitting ? "Enviando..." : "Enviar Respostas"}
+              </Button>
+              <p className="text-sm text-muted-foreground mt-2">
+                {Object.keys(surveyAnswers).length} de {surveyQuestions.length} perguntas respondidas
+              </p>
+            </div>
           </div>
         </div>
       </section>
